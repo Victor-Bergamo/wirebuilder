@@ -1,0 +1,20 @@
+{
+    "name": "coffeemosele/wirebuilder",
+    "description": "This is a livewire builder",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Victor Bergamo",
+            "email": "victorhbbergamo@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Coffeemosele\\Wirebuilder\\WirebuilderServiceProvider"
+            ]
+        }
+    }
+}
