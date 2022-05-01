@@ -21,8 +21,6 @@ class WirebuilderServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // $this->mergeConfigFrom(__DIR__ . '/../config/wirebuilder.php', 'wirebuilder');
-
         $this->commands($this->commands);
     }
 
