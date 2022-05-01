@@ -21,7 +21,7 @@ class WirebuilderServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/wirebuilder.php', 'wirebuilder');
+        // $this->mergeConfigFrom(__DIR__ . '/../config/wirebuilder.php', 'wirebuilder');
 
         $this->commands($this->commands);
     }
@@ -33,6 +33,15 @@ class WirebuilderServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        if ($this->app->runningInConsole()) {
+            $this->registerPublishing();
+        }
+    }
+
+    protected function registerPublishing()
+    {
+        $this->publishes([
+            __DIR__ . '/../config/wirebuilder.php' => config_path('wirebuilder.php'),
+        ], 'wirebuilder-config');
     }
 }
