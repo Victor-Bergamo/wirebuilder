@@ -3,6 +3,9 @@
 namespace Coffeemosele\Wirebuilder\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class InstallCommand extends Command
 {
@@ -29,21 +32,57 @@ class InstallCommand extends Command
 
     public function handle()
     {
-        $this->info('Hello');
-        $this->initWirebuilderDirectory();
+        $this->initComponents();
     }
 
-    public function initWirebuilderDirectory()
+    /**
+     * Init components
+     * - make directories
+     * - copy files to directories
+     *
+     * @return void
+     */
+    public function initComponents()
     {
         $this->directory = config('wirebuilder.directory');
 
         if (is_dir($this->directory)) {
-            $this->line("<error>{$this->directory} directory already exists !</error> ");
+            $this->error("{$this->directory} directory already exists !");
 
-            return;
+            if (!$this->confirm('Do you want to copy the components anyway?')) {
+                return;
+            }
         }
 
-        $this->line('<info>Admin directory was created:</info> ' . str_replace(base_path(), '', $this->directory));
+        $this->copyFilesFromPackage();
+        $this->info('Files created successfully' . str_replace(base_path(), '', $this->directory));
+    }
+
+    /**
+     * Copy files.
+     *
+     * @param string $path
+     */
+    protected function copyFilesFromPackage()
+    {
+        $resources = dirname(__DIR__, 2) . '/resources/views/components';
+
+        $dirIterator = new RecursiveDirectoryIterator($resources);
+        $it = new RecursiveIteratorIterator($dirIterator);
+
+        while ($it->valid()) {
+            if (!$it->isDot() && $it->isFile() && $it->isReadable()) {
+
+                // if the directory does not exist
+                if (!is_dir($this->directory . "/{$it->getSubPath()}")) {
+                    $this->makeDir($it->getSubPath());
+                }
+
+                copy($it->key(), $this->directory . "/{$it->getSubPathName()}");
+            }
+
+            $it->next();
+        }
     }
 
     /**

@@ -7,6 +7,14 @@ use Illuminate\Support\ServiceProvider;
 class WirebuilderServiceProvider extends ServiceProvider
 {
     /**
+     * @var array
+     */
+    protected $commands = [
+        Console\InstallCommand::class,
+        Console\CreateCommand::class,
+    ];
+
+    /**
      * Register services.
      *
      * @return void
@@ -15,9 +23,7 @@ class WirebuilderServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/wirebuilder.php', 'wirebuilder');
 
-        $this->commands([
-            Console\InstallCommand::class,
-        ]);
+        $this->commands($this->commands);
     }
 
     /**
