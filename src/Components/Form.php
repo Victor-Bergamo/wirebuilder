@@ -5,12 +5,14 @@ namespace Coffeemosele\Wirebuilder\Components;
 use Livewire\Component;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
-use Coffeemosele\Wirebuilder\Facades\Crafter;
+use Coffeemosele\Wirebuilder\Crafter;
 use Coffeemosele\Wirebuilder\Components\Form\Field;
 use Coffeemosele\Wirebuilder\Components\Form\Builder;
 use Coffeemosele\Wirebuilder\Components\Form\Layout\Layout;
 use Coffeemosele\Wirebuilder\Components\Form\Concerns\HasFields;
 use Coffeemosele\Wirebuilder\Components\Form\Field\Button;
+use Coffeemosele\Wirebuilder\Facades\Wirebuilder;
+use ReflectionClass;
 
 class Form extends Component
 {
@@ -96,7 +98,7 @@ class Form extends Component
 
     public function __call($method, $arguments)
     {
-        if ($className = static::findFieldClass($method)) {
+        if ($className = $this->getField($method)) {
             $column = Arr::get($arguments, 0, ''); //[0];
 
             $element = new $className($column, array_slice($arguments, 1));
@@ -105,6 +107,17 @@ class Form extends Component
 
             return $element;
         }
+    }
+
+    protected function getField($field)
+    {
+        $availableFields = Wirebuilder::availableFields();
+
+        if ($class = Arr::get($availableFields, $field)) {
+            return $class;
+        }
+
+        return false;
     }
 
     /**

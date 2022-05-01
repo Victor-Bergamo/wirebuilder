@@ -2,6 +2,7 @@
 
 namespace Coffeemosele\Wirebuilder\Console;
 
+use Coffeemosele\Wirebuilder\Facades\Wirebuilder;
 use Illuminate\Console\Command;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -31,7 +32,7 @@ class InstallCommand extends Command
 
     public function handle()
     {
-        if (is_null(config('wirebuilder'))) {
+        if (Wirebuilder::configNotPublished()) {
             return $this->warn(
                 'Please publish the config file by running ' .
                     '\'php artisan vendor:publish --tag=wirebuilder-config\''
@@ -45,7 +46,7 @@ class InstallCommand extends Command
      * Init components
      * - make directories
      * - copy files to directories
-     *
+     * 
      * @return void
      */
     public function initComponents()

@@ -2,6 +2,7 @@
 
 namespace Coffeemosele\Wirebuilder;
 
+use Coffeemosele\Wirebuilder\Facades\Wirebuilder;
 use Illuminate\Support\ServiceProvider;
 
 class WirebuilderServiceProvider extends ServiceProvider
@@ -22,6 +23,8 @@ class WirebuilderServiceProvider extends ServiceProvider
     public function register()
     {
         $this->commands($this->commands);
+        $this->registerFacades();
+        $this->registerFields();
     }
 
     /**
@@ -41,5 +44,23 @@ class WirebuilderServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/wirebuilder.php' => config_path('wirebuilder.php'),
         ], 'wirebuilder-config');
+    }
+
+    protected function registerFacades()
+    {
+        $this->app->singleton('Wirebuilder', function ($app) {
+            return new \Coffeemosele\Wirebuilder\Wirebuilder();
+        });
+    }
+
+    protected function registerFields()
+    {
+        Wirebuilder::fields([
+            'button' => Components\Form\Field\Button::class,
+            'text' => Components\Form\Field\Text::class,
+            'email' => Components\Form\Field\Email::class,
+            'password' => Components\Form\Field\Password::class,
+            'select' => Components\Form\Field\Select::class,
+        ]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Coffeemosele\Wirebuilder\Facades;
+namespace Coffeemosele\Wirebuilder;
 
 use Livewire\Component;
 use Illuminate\Support\Arr;

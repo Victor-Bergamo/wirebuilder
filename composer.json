@@ -1,6 +1,8 @@
 {
     "name": "coffeemosele/wirebuilder",
     "description": "This is a livewire builder",
+    "type": "library",
+    "keywords": ["laravel", "livewire", "page", "constructor", "builder", "wire"],
     "license": "MIT",
     "authors": [
         {
@@ -9,12 +11,22 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "php": "^8.0.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Coffeemosele\\Wirebuilder\\": "src/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
                 "Coffeemosele\\Wirebuilder\\WirebuilderServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Crafter": "Coffeemosele\\Wirebuilder\\Crafter"
+            }
         }
     }
 }
