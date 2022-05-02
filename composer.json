@@ -10,7 +10,6 @@
             "email": "victorhbbergamo@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=8.0"
     },
