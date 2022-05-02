@@ -27,5 +27,7 @@
                 "Crafter": "Coffeemosele\\Wirebuilder\\Crafter"
             }
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
