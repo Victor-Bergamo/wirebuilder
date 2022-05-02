@@ -4,6 +4,7 @@ namespace Coffeemosele\Wirebuilder\Console;
 
 use Coffeemosele\Wirebuilder\Facades\Wirebuilder;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -32,6 +33,7 @@ class InstallCommand extends Command
 
     public function handle()
     {
+
         if (Wirebuilder::configNotPublished()) {
             return $this->warn(
                 'Please publish the config file by running ' .
@@ -61,35 +63,26 @@ class InstallCommand extends Command
             }
         }
 
-        $this->copyFilesFromPackage();
-        $this->info('Files created successfully [' . str_replace(base_path(), '', $this->directory) . ']');
+        if ($this->copyFilesFromPackage()) {
+            $this->info('Files created successfully [' . str_replace(base_path(), '', $this->directory) . ']');
+            return;
+        }
+
+        $this->error('Files cannot be moved.');
     }
 
     /**
      * Copy files.
      *
      * @param string $path
+     * 
+     * @return bool
      */
     protected function copyFilesFromPackage()
     {
         $resources = dirname(__DIR__, 2) . '/resources/views/components';
 
-        $dirIterator = new RecursiveDirectoryIterator($resources);
-        $it = new RecursiveIteratorIterator($dirIterator);
-
-        while ($it->valid()) {
-            if (!$it->isDot() && $it->isFile() && $it->isReadable()) {
-
-                // if the directory does not exist
-                if (!is_dir($this->directory . "/{$it->getSubPath()}")) {
-                    $this->makeDir($it->getSubPath());
-                }
-
-                copy($it->key(), $this->directory . "/{$it->getSubPathName()}");
-            }
-
-            $it->next();
-        }
+        return File::copyDirectory($resources, $this->directory);
     }
 
     /**
